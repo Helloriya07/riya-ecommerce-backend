@@ -8,4 +8,6 @@ public interface CategoryService {
 
      List<Category> getallcategories();
     void createCategory(Category category);
+
+    String deleteCategory(Long categoryId);
 }
