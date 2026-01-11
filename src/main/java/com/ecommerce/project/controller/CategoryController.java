@@ -3,9 +3,11 @@ package com.ecommerce.project.controller;
 
 import com.ecommerce.project.modal.Category;
 import com.ecommerce.project.service.CategoryService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,19 +20,27 @@ private CategoryService categoryService;
     }
 
     @GetMapping("/api/public/categories")
-    public List<Category> getAllCategories(){
-        return categoryService.getallcategories();
+    public ResponseEntity<List<Category>> getAllCategories(){
+        List<Category> categories =  categoryService.getallcategories();
+        return new ResponseEntity<>(categories,HttpStatus.OK);
     }
 
     @PostMapping("/api/public/categories")
-    public String createCategory(@RequestBody Category category){
+    public ResponseEntity<String> createCategory(@RequestBody Category category){
         categoryService.createCategory(category);
-        return "Category created successfully";
+        return new ResponseEntity<>("Category created successfully",HttpStatus.CREATED);
     }
     @DeleteMapping("/api/admin/categories/{categoryId}")
-    public String deleteCategory(@PathVariable Long categoryId){
-        String status = categoryService.deleteCategory(categoryId);
-        return status;
+    public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId){
+        try {
+            String status = categoryService.deleteCategory(categoryId);
+            //multiple ways of response entity
+          //  return new ResponseEntity<>(status, HttpStatus.OK);
+           // return  ResponseEntity.ok(status);
+            return  ResponseEntity.status(HttpStatus.OK).body(status);
+        }catch (ResponseStatusException e){
+            return new ResponseEntity<>(e.getReason(),e.getStatusCode());
+        }
 
     }
 
