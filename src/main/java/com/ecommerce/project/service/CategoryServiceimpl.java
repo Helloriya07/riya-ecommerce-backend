@@ -1,5 +1,6 @@
 package com.ecommerce.project.service;
 
+import com.ecommerce.project.exception.APIException;
 import com.ecommerce.project.exception.ResponseNotFoundException;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.repository.CategoryRepository;
@@ -13,11 +14,11 @@ import java.util.List;
 @Service
 public class CategoryServiceimpl implements CategoryService {
 
-//    private final List<Category> categories = new ArrayList<>();
+    //    private final List<Category> categories = new ArrayList<>();
     private Long nextId = 1L;
 
-@Autowired
-private CategoryRepository categoryRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Override
     public List<Category> getallcategories() {
@@ -27,6 +28,9 @@ private CategoryRepository categoryRepository;
 
     @Override
     public void createCategory(Category category) {
+        Category savedCategory = categoryRepository.findByCategoryName(category.getCategoryName());
+        if (savedCategory != null)
+            throw new APIException("category with name " + category.getCategoryName() + " already exists!!");
 //        category.setCategoryId(nextId++);
         categoryRepository.save(category);
 
@@ -34,8 +38,8 @@ private CategoryRepository categoryRepository;
 
     @Override
     public String deleteCategory(Long categoryId) {
-        Category category =  categoryRepository.findById(categoryId)
-                .orElseThrow(()-> new ResponseNotFoundException("Category","categoryId","categoryId"));
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResponseNotFoundException("Category", "categoryId", "categoryId"));
 
 
         categoryRepository.delete(category);
@@ -45,12 +49,12 @@ private CategoryRepository categoryRepository;
     @Override
     public Category updatecategory(Category category, Long categoryId) {
         Category savedCategory = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResponseNotFoundException("Category","categoryId","categoryId"));
+                .orElseThrow(() -> new ResponseNotFoundException("Category", "categoryId", "categoryId"));
         category.setCategoryId(categoryId);
         savedCategory = categoryRepository.save(category);
         return savedCategory;
+
+
     }
-
-
 }
 
