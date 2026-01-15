@@ -42,14 +42,15 @@ private CategoryRepository categoryRepository;
     }
 
     @Override
-    public Category updatecategory(Category category,Long categoryId) {
-
-        Category savedCategory =  categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found"));
+    public Category updatecategory(Category category, Long categoryId) {
+        Category savedCategory = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found"));
 
         category.setCategoryId(categoryId);
         savedCategory = categoryRepository.save(category);
         return savedCategory;
     }
-    }
+
+
+}
 
