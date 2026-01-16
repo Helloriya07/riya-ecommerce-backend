@@ -37,26 +37,22 @@ private CategoryService categoryService;
     }
     @DeleteMapping("/admin/categories/{categoryId}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId){
-        try {
+
             String status = categoryService.deleteCategory(categoryId);
             //multiple ways of response entity
-          //  return new ResponseEntity<>(status, HttpStatus.OK);
-           // return  ResponseEntity.ok(status);
-            return  ResponseEntity.status(HttpStatus.OK).body(status);
-        }catch (ResponseStatusException e){
-            return new ResponseEntity<>(e.getReason(),e.getStatusCode());
+              return new ResponseEntity<>(status, HttpStatus.OK);
+            // return  ResponseEntity.ok(status);
+           // return ResponseEntity.status(HttpStatus.OK).body(status);
         }
 
-    }
+
     @PutMapping("/public/categories/{categoryId}")
     public ResponseEntity<String> updateCategory(@RequestBody Category category,
                                                  @PathVariable Long categoryId){
-      try{
+
           Category savedCategory = categoryService.updatecategory(category,categoryId);
           return new ResponseEntity<>("Updated Category with category id"  + categoryId ,HttpStatus.OK);
-      } catch(ResponseStatusException e){
-          return new ResponseEntity<>(e.getReason(),e.getStatusCode());
-      }
+
     }
 
 }

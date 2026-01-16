@@ -5,25 +5,26 @@ import com.ecommerce.project.exception.ResponseNotFoundException;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+
 
 import java.util.List;
 
 @Service
 public class CategoryServiceimpl implements CategoryService {
 
-    //    private final List<Category> categories = new ArrayList<>();
-    private Long nextId = 1L;
+
 
     @Autowired
     private CategoryRepository categoryRepository;
 
     @Override
     public List<Category> getallcategories() {
-
-        return categoryRepository.findAll();
+        List<Category> categories= categoryRepository.findAll();
+        if(categories.isEmpty())
+            throw new APIException("No category created till now");
+        return categories;
     }
 
     @Override
@@ -31,7 +32,7 @@ public class CategoryServiceimpl implements CategoryService {
         Category savedCategory = categoryRepository.findByCategoryName(category.getCategoryName());
         if (savedCategory != null)
             throw new APIException("category with name " + category.getCategoryName() + " already exists!!");
-//        category.setCategoryId(nextId++);
+
         categoryRepository.save(category);
 
     }
