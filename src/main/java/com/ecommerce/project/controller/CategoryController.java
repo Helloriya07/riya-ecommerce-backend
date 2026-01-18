@@ -49,11 +49,11 @@ private CategoryService categoryService;
 
 
     @PutMapping("/public/categories/{categoryId}")
-    public ResponseEntity<String> updateCategory(@RequestBody Category category,
+    public ResponseEntity<CategoryDTO> updateCategory(@RequestBody CategoryDTO categoryDTO,
                                                  @PathVariable Long categoryId){
 
-          Category savedCategory = categoryService.updatecategory(category,categoryId);
-          return new ResponseEntity<>("Updated Category with category id"  + categoryId ,HttpStatus.OK);
+          CategoryDTO savedCategoryDTO = categoryService.updatecategory(categoryDTO,categoryId);
+          return new ResponseEntity<>(savedCategoryDTO  ,HttpStatus.OK);
 
     }
 
