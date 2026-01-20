@@ -16,8 +16,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class CategoryController {
 
+    @GetMapping("/echo")
+//    public ResponseEntity<String> echoMessage (@RequestParam (name = "message",defaultValue = "Hello world") String message)
+//    public ResponseEntity<String> echoMessage (@RequestParam (name = "message") String message)
+    public ResponseEntity<String> echoMessage (@RequestParam (name = "message",required = false) String message)
+    {
+        return new ResponseEntity<>("Echoed message: "+message,HttpStatus.OK);
+    }
+
     @Autowired
 private CategoryService categoryService;
+
 
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
