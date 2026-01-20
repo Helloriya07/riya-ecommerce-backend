@@ -16,13 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class CategoryController {
 
-    @GetMapping("/echo")
-//    public ResponseEntity<String> echoMessage (@RequestParam (name = "message",defaultValue = "Hello world") String message)
-//    public ResponseEntity<String> echoMessage (@RequestParam (name = "message") String message)
-    public ResponseEntity<String> echoMessage (@RequestParam (name = "message",required = false) String message)
-    {
-        return new ResponseEntity<>("Echoed message: "+message,HttpStatus.OK);
-    }
+
 
     @Autowired
 private CategoryService categoryService;
@@ -32,11 +26,16 @@ private CategoryService categoryService;
         this.categoryService = categoryService;
     }
 
-//    @GetMapping("/public/categories")
-    @RequestMapping(value = "/public/categories", method = RequestMethod.GET)
-    public ResponseEntity<CategoryResponse> getAllCategories(){
-        CategoryResponse categoryResponse =  categoryService.getallcategories();
-        return new ResponseEntity<>(categoryResponse,HttpStatus.OK);
+    @GetMapping("/public/categories")
+//    @RequestMapping(value = "/public/categories", method = RequestMethod.GET)
+    public ResponseEntity<CategoryResponse> getAllCategories(
+            @RequestParam(name = "PageNumber") Integer pageNumber,
+            @RequestParam(name = "PageSize") Integer pageSize
+    ){
+
+            CategoryResponse categoryResponse = categoryService.getallcategories(pageNumber,pageSize);
+            return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
+
     }
 
     @PostMapping("/public/categories")
