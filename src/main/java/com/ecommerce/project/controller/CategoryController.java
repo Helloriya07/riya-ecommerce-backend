@@ -29,8 +29,8 @@ private CategoryService categoryService;
     @GetMapping("/public/categories")
 //    @RequestMapping(value = "/public/categories", method = RequestMethod.GET)
     public ResponseEntity<CategoryResponse> getAllCategories(
-            @RequestParam(name = "PageNumber") Integer pageNumber,
-            @RequestParam(name = "PageSize") Integer pageSize
+            @RequestParam(name = "pageNumber") Integer pageNumber,
+            @RequestParam(name = "pageSize") Integer pageSize
     ){
 
             CategoryResponse categoryResponse = categoryService.getallcategories(pageNumber,pageSize);
