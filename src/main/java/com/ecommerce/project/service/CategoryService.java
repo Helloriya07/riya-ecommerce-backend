@@ -8,7 +8,7 @@ import com.ecommerce.project.payload.CategoryResponse;
 
 public interface CategoryService {
 
-     CategoryResponse getallcategories(Integer pageNumber , Integer pageSize);
+     CategoryResponse getallcategories(Integer pageNumber , Integer pageSize,String sortBy , String sortOrder);
 
     CategoryDTO createCategory(CategoryDTO categoryDTO);
 

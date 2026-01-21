@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -30,9 +31,13 @@ public class CategoryServiceimpl implements CategoryService {
 
 
     @Override
-    public CategoryResponse getallcategories(Integer pageNumber , Integer pageSize) {
+    public CategoryResponse getallcategories(Integer pageNumber , Integer pageSize,String sortBy , String sortOrder) {
 
-        Pageable pageDetails = PageRequest.of(pageNumber,pageSize);
+        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")?
+                Sort.by(sortBy).ascending()
+                :Sort.by(sortBy).descending();
+
+        Pageable pageDetails = PageRequest.of(pageNumber,pageSize,sortByAndOrder);
         Page<Category> categorypage = categoryRepository.findAll(pageDetails);
 
         List<Category> categories = categorypage.getContent();
