@@ -56,10 +56,6 @@ public class CategoryServiceImpl implements CategoryService {
         categoryResponse.setTotalPages(categorypage.getTotalPages());
         categoryResponse.setLastPage(categorypage.isLast());
 
-
-
-
-
         return categoryResponse;
     }
 
@@ -70,6 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category categoryFromDb = categoryRepository.findByCategoryName(category.getCategoryName());
         if (categoryFromDb != null)
             throw new APIException("category with name " + category.getCategoryName() + " already exists!!");
+
 
         Category savedCategory = categoryRepository.save(category);
         return modelMapper.map(savedCategory, CategoryDTO.class);
