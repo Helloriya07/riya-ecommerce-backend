@@ -19,8 +19,9 @@ public class Product {
     private String description;
     private Integer quantity;
     private  double price;
-    private double specialPrice;
     private double discount;
+    private double specialPrice;
+
 
     //Defining the relationship
     @ManyToOne
