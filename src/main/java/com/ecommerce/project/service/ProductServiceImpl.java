@@ -10,11 +10,15 @@ import com.ecommerce.project.repository.CategoryRepository;
 import com.ecommerce.project.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,9 +32,11 @@ public class ProductServiceImpl implements ProductService {
     private ModelMapper modelMapper;
 
     @Override
-    public ProductDTO addProduct(Long categoryId, Product product) {
+    public ProductDTO addProduct(Long categoryId, ProductDTO productDTO) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResponseNotFoundException("Category", "categoryId", categoryId));
+
+        Product product = modelMapper.map(productDTO, Product.class);
         product.setImage("default.png");
         product.setCategory(category);
         double specialPrice = product.getPrice()
@@ -79,12 +85,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO updateProduct(Long productId, Product product) {
+    public ProductDTO updateProduct(Long productId, ProductDTO productDTO) {
         // Get the existing product from db
         Product productFromDb = productRepository.findById(productId)
                 .orElseThrow(()-> new ResponseNotFoundException("Product","productId",productId));
 
+        Product product = modelMapper.map(productDTO, Product.class);
         //update the product info with the one in requestBody
+
         productFromDb.setProductName(product.getProductName());
         productFromDb.setDescription(product.getDescription());
         productFromDb.setQuantity(product.getQuantity());
@@ -98,5 +106,56 @@ public class ProductServiceImpl implements ProductService {
         //return as product dto with help of modelmapper
         return modelMapper.map(savedProduct,ProductDTO.class);
 
+    }
+
+    @Override
+    public ProductDTO deleteProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(()-> new ResponseNotFoundException("Product","productId",productId));
+        productRepository.delete(product);
+        return modelMapper.map(product, ProductDTO.class);
+    }
+
+    @Override
+    public ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException {
+        // Get the product from DB
+        Product productFromDb = productRepository.findById(productId)
+                .orElseThrow(() -> new ResponseNotFoundException("Product", "productId", productId));
+
+        // Upload image to server
+        // Get the file name of uploaded image
+        String path = "images/";
+        String fileName = uploadImage(path, image);
+
+        // Updating the new file name to the product
+        productFromDb.setImage(fileName);
+
+        // Save updated product
+        Product updatedProduct = productRepository.save(productFromDb);
+
+        // return DTO after mapping product to DTO
+        return modelMapper.map(updatedProduct, ProductDTO.class);
+    }
+
+    private String uploadImage(String path, MultipartFile file) throws IOException {
+        // File names of current / original file
+        String originalFileName = file.getOriginalFilename();
+
+        // Generate a unique file name
+        String randomId = UUID.randomUUID().toString();
+        // mat.jpg --> 1234 --> 1234.jpg
+        String fileName = randomId.concat(originalFileName.substring(originalFileName.lastIndexOf('.')));
+        String filePath = path + File.separator + fileName;
+
+        // Check if path exist and create
+        File folder = new File(path);
+        if (!folder.exists())
+            folder.mkdir();
+
+        // Upload to server
+        Files.copy(file.getInputStream(), Paths.get(filePath));
+
+        // returning file name
+        return fileName;
     }
 }
