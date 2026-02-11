@@ -57,8 +57,9 @@ private UserDetailsServiceImpl userDetailsService;
     }
 
     private String parseJwt(HttpServletRequest request) {
-        String jwt = jwtUtils.getJWTFromHeader(request);
+        String jwt = jwtUtils.getJwtFromCookies(request);
         logger.debug("AuthTokenFilter.java: {}", jwt);
         return jwt;
     }
+
 }
