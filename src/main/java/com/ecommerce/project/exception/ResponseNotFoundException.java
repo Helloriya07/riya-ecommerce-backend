@@ -17,7 +17,7 @@ public class ResponseNotFoundException extends RuntimeException {
     }
 
     public ResponseNotFoundException(String resourceName, String field, Long fieldId) {
-        super(String.format("%d not found with %d : %d",resourceName,field,fieldId));
+        super(String.format("%s not found with %s : %d",resourceName,field,fieldId));
         this.resourceName = resourceName;
         this.field = field;
         this.fieldId = fieldId;
