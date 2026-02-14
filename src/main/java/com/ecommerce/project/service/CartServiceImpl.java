@@ -170,10 +170,22 @@ return cartDTO;
             return cartDTO;
         }
 
+    @Override
+    public String deleteProductfromCart(Long cartId, Long productId) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(()-> new ResponseNotFoundException("Cart","cartId",cartId));
 
+        CartItem cartItem = cartItemRepository.findCartItemByProductIdAndCartId(cartId,productId);
 
+        if (cartItem==null){
+            throw new ResponseNotFoundException("Product","productId",productId);
+        }
+        cart.setTotalPrice(cart.getTotalPrice()-
+                (cartItem.getProductPrice() * cartItem.getQuantity()));
+        cartItemRepository.deleteCartItemByProductIdAndCartId(cartId,productId);
 
-
+        return "Product" + cartItem.getProduct().getProductName() + " removed from the cart";
+    }
 
 
     private Cart createCart(){
