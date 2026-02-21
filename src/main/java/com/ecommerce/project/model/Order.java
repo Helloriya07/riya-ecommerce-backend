@@ -31,11 +31,11 @@ public class Order {
     private LocalDate orderDate;
 
     @OneToOne
-    @JoinColumn(name = "payement_id")
+    @JoinColumn(name = "payment_id")
     private Payment payment;
 
     private Double totalAmount;
-    private String orderStaus;
+    private String orderStatus;
 
 
 

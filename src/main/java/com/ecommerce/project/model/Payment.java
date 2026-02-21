@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "payement")
+@Table(name = "payments")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,11 +17,11 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentId;
 
-    @OneToOne(mappedBy = "payment_id",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @OneToOne(mappedBy = "payment",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private Order order;
 
     @NotBlank
-    @Size(min = 4 , message = "Payement method must contain at least 4 characters")
+    @Size(min = 4 , message = "Payment method must contain at least 4 characters")
     private String paymentMethod;
 
     private String pgPaymentId;
@@ -29,8 +29,8 @@ public class Payment {
     private String pgResponseMessage;
     private String pgName;
 
-    public Payment(Long paymentId,String pgPaymentId, String pgStatus,String pgResponseMessage,String pgName){
-            this.paymentId = paymentId;
+    public Payment(String paymentMethod,String pgPaymentId, String pgStatus,String pgResponseMessage,String pgName){
+            this.paymentMethod = paymentMethod;
             this.pgPaymentId = pgPaymentId;
             this.pgStatus = pgStatus;
             this.pgResponseMessage = pgResponseMessage;
