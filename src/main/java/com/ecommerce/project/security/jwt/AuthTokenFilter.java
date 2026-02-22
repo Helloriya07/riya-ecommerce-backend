@@ -56,10 +56,21 @@ private UserDetailsServiceImpl userDetailsService;
         filterChain.doFilter(request, response);
     }
 
-    private String parseJwt(HttpServletRequest request) {
-        String jwt = jwtUtils.getJwtFromCookies(request);
-        logger.debug("AuthTokenFilter.java: {}", jwt);
-        return jwt;
+//    private String parseJwt(HttpServletRequest request) {
+//        String jwt = jwtUtils.getJwtFromCookies(request);
+//        logger.debug("AuthTokenFilter.java: {}", jwt);
+//        return jwt;
+//    }
+private String parseJwt(HttpServletRequest request) {
+    String jwtFromCookie = jwtUtils.getJwtFromCookies(request);
+    if (jwtFromCookie!=null){
+        return jwtFromCookie;
     }
+    String jwtFromHeader = jwtUtils.getJWTFromHeader(request);
+    if (jwtFromHeader!=null){
+        return jwtFromHeader;
+    }
+    return null;
+}
 
 }
